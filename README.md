@@ -1,5 +1,11 @@
 # PANet: Few-Shot Image Semantic Segmentation with Prototype Alignment
 
+## UPDATE!!
+
+01/09/2020 add [sparceconvnet](https://github.com/facebookresearch/SparseConvNet) and experimenton scannet to this repository.
+
+
+
 This repo contains code for our ICCV 2019 paper [PANet: Few-Shot Image Semantic Segmentation with Prototype Alignment](https://arxiv.org/abs/1908.06391).
 
 ### Dependencies
