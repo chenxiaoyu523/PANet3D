@@ -13,6 +13,13 @@ def set_seed(seed):
     torch.cuda.manual_seed_all(seed)
 
 CLASS_LABELS = {
+    'ScanNet': {
+        'all': set(range(20)),
+        0: set(range(20)) - set([11, 14, 15, 16, 18]),
+        1: set(range(20)) - set(range(6, 11)),
+        2: set(range(20)) - set(range(11, 16)),
+        3: set(range(20)) - set(range(16, 21)),
+    },
     'VOC': {
         'all': set(range(1, 21)),
         0: set(range(1, 21)) - set(range(1, 6)),

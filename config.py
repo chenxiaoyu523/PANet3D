@@ -28,11 +28,11 @@ def cfg():
     seed = 1234
     cuda_visable = '0, 1, 2, 3, 4, 5, 6, 7'
     gpu_id = 0
-    mode = 'test' # 'train' or 'test'
+    mode = 'train' # 'train' or 'test'
 
 
     if mode == 'train':
-        dataset = 'VOC'  # 'VOC' or 'COCO'
+        dataset = 'ScanNet'  # 'VOC' or 'COCO' or 'ScanNet'
         n_steps = 30000
         label_sets = 0
         batch_size = 1
@@ -104,9 +104,11 @@ def cfg():
     path = {
         'log_dir': './runs',
         'init_path': './pretrained_model/vgg16-397923af.pth',
-        'VOC':{'data_dir': '../../data/Pascal/VOCdevkit/VOC2012/',
+        'ScanNet':{'data_dir': 'ScanNet/',
+               'data_split': 'trainval',},
+        'VOC':{'data_dir': 'VOCdevkit/VOC2012/',
                'data_split': 'trainaug',},
-        'COCO':{'data_dir': '../../data/COCO/',
+        'COCO':{'data_dir': 'COCO/',
                 'data_split': 'train',},
     }
 
