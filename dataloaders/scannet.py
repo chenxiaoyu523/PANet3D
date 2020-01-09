@@ -68,29 +68,51 @@ class ScanNet(BaseDataset):
         id_ = self.ids[idx]
         data = torch.load(os.path.join(self._data_dir, f'{id_}.pth'))
 
-        a,b,c=data
-        m=np.eye(3)+np.random.randn(3,3)*0.1
-        m[0][0]*=np.random.randint(0,2)*2-1
-        m*=scale
-        theta=np.random.rand()*2*math.pi
-        m=np.matmul(m,[[math.cos(theta),math.sin(theta),0],[-math.sin(theta),math.cos(theta),0],[0,0,1]])
-        a=np.matmul(a,m)
-        if elastic_deformation:
-            a=elastic(a,6*scale//50,40*scale/50)
-            a=elastic(a,20*scale//50,160*scale/50)
-        m=a.min(0)
-        M=a.max(0)
-        q=M-m
-        offset=-m+np.clip(full_scale-M+m-0.001,0,None)*np.random.rand(3)+np.clip(full_scale-M+m+0.001,None,0)*np.random.rand(3)
-        a+=offset
-        idxs=(a.min(1)>=0)*(a.max(1)<full_scale)
-        a=a[idxs]
-        b=b[idxs]
-        c=c[idxs]
-        a=torch.from_numpy(a).long()
-        coord = torch.cat([a,torch.LongTensor(a.shape[0],1).fill_(idx)],1)
-        feat = torch.from_numpy(b)+torch.randn(3)*0.1
-        mask = torch.from_numpy(c)
+        if self.split == 'train':
+            a,b,c=data
+            m=np.eye(3)+np.random.randn(3,3)*0.1
+            m[0][0]*=np.random.randint(0,2)*2-1
+            m*=scale
+            theta=np.random.rand()*2*math.pi
+            m=np.matmul(m,[[math.cos(theta),math.sin(theta),0],[-math.sin(theta),math.cos(theta),0],[0,0,1]])
+            a=np.matmul(a,m)
+            if elastic_deformation:
+                a=elastic(a,6*scale//50,40*scale/50)
+                a=elastic(a,20*scale//50,160*scale/50)
+            m=a.min(0)
+            M=a.max(0)
+            q=M-m
+            offset=-m+np.clip(full_scale-M+m-0.001,0,None)*np.random.rand(3)+np.clip(full_scale-M+m+0.001,None,0)*np.random.rand(3)
+            a+=offset
+            idxs=(a.min(1)>=0)*(a.max(1)<full_scale)
+            a=a[idxs]
+            b=b[idxs]
+            c=c[idxs]
+            a=torch.from_numpy(a).long()
+            coord = torch.cat([a,torch.LongTensor(a.shape[0],1).fill_(idx)],1)
+            feat = torch.from_numpy(b)+torch.randn(3)*0.1
+            mask = torch.from_numpy(c)
+        else:
+            a,b,c=data
+            m=np.eye(3)
+            m[0][0]*=np.random.randint(0,2)*2-1
+            m*=scale
+            theta=np.random.rand()*2*math.pi
+            m=np.matmul(m,[[math.cos(theta),math.sin(theta),0],[-math.sin(theta),math.cos(theta),0],[0,0,1]])
+            a=np.matmul(a,m)+full_scale/2+np.random.uniform(-2,2,3)
+            m=a.min(0)
+            M=a.max(0)
+            q=M-m
+            offset=-m+np.clip(full_scale-M+m-0.001,0,None)*np.random.rand(3)+np.clip(full_scale-M+m+0.001,None,0)*np.random.rand(3)
+            a+=offset
+            idxs=(a.min(1)>=0)*(a.max(1)<full_scale)
+            a=a[idxs]
+            b=b[idxs]
+            c=c[idxs]
+            a=torch.from_numpy(a).long()
+            coord = torch.cat([a,torch.LongTensor(a.shape[0],1).fill_(idx)],1)
+            feat = torch.from_numpy(b)
+            mask = torch.from_numpy(c)
 
         sample = {'coord': coord,
                   'image': feat,
