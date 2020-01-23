@@ -73,6 +73,8 @@ def cfg():
             dataset = 'VOC'
         elif 'COCO' in snapshot:
             dataset = 'COCO'
+        elif 'ScanNet' in snapshot:
+            dataset = 'ScanNet'
         else:
             raise ValueError('Wrong snapshot name !')
 
